@@ -682,6 +682,10 @@ waitForThree(function(){
     }
   }
 
+  // Mobile detect (전역)
+  var isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  var OBJ_MULT = isMobile ? 0.3 : 1; // 모바일은 30%만
+
   // State
   let inited = false, running = false, overShown = false;
   let sc = 0, dist = 0, spd = 10, lane = 1, targetX = 0;
@@ -815,10 +819,10 @@ waitForThree(function(){
     camera.position.set(0,5.5,12);
     camera.lookAt(0,0.5,-15);
 
-    renderer = new THREE.WebGLRenderer({antialias:true});
+    renderer = new THREE.WebGLRenderer({antialias:!isMobile});
     renderer.setSize(w,h);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
-    renderer.shadowMap.enabled = true;
+    renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio,2));
+    renderer.shadowMap.enabled = !isMobile;
     renderer.domElement.style.position = 'absolute';
     renderer.domElement.style.top = '0';
     renderer.domElement.style.left = '0';
@@ -939,7 +943,7 @@ waitForThree(function(){
         // Replace existing buildings with GLB model
         blds.forEach(function(b){ scene.remove(b); });
         blds=[];
-        for(var i=0;i<200;i++){
+        for(var i=0;i<Math.floor(200*OBJ_MULT);i++){
           var s=Math.random()>0.5?1:-1;
           var b=mkBuilding(s);
           b.position.set(s*(11+Math.random()*5),0,-Math.random()*RL);
@@ -957,7 +961,7 @@ waitForThree(function(){
           if(child.isMesh){ child.castShadow=true; }
         });
         // Add more buildings with house2
-        for(var i=0;i<150;i++){
+        for(var i=0;i<Math.floor(150*OBJ_MULT);i++){
           var s=Math.random()>0.5?1:-1;
           var b=mkBuilding2(s);
           b.position.set(s*(11+Math.random()*5),0,-Math.random()*RL);
@@ -986,7 +990,7 @@ waitForThree(function(){
       });
     });
 
-    for(var i=0;i<100;i++){
+    for(var i=0;i<Math.floor(100*OBJ_MULT);i++){
       var t=mkTree(); var s=Math.random()>0.5?1:-1;
       var dist= 8 + Math.random()*10;
       t.position.set(s*dist, 0, -Math.random()*RL);
