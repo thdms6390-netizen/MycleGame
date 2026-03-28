@@ -939,10 +939,10 @@ waitForThree(function(){
         // Replace existing buildings with GLB model
         blds.forEach(function(b){ scene.remove(b); });
         blds=[];
-        for(var i=0;i<80;i++){
+        for(var i=0;i<200;i++){
           var s=Math.random()>0.5?1:-1;
           var b=mkBuilding(s);
-          b.position.set(s*(8+Math.random()*5),0,-Math.random()*RL);
+          b.position.set(s*(11+Math.random()*5),0,-Math.random()*RL);
           scene.add(b); blds.push(b);
         }
       });
@@ -957,10 +957,10 @@ waitForThree(function(){
           if(child.isMesh){ child.castShadow=true; }
         });
         // Add more buildings with house2
-        for(var i=0;i<60;i++){
+        for(var i=0;i<150;i++){
           var s=Math.random()>0.5?1:-1;
           var b=mkBuilding2(s);
-          b.position.set(s*(8+Math.random()*5),0,-Math.random()*RL);
+          b.position.set(s*(11+Math.random()*5),0,-Math.random()*RL);
           scene.add(b); blds.push(b);
         }
       });
@@ -1002,10 +1002,10 @@ waitForThree(function(){
       scene.add(c); clds.push(c);
       cloudPositions.push({x:px,y:py,z:pz,s:1});
     }
-    for(var i=0;i<400;i++){
+    for(var i=0;i<200;i++){
       var s=Math.random()>0.5?1:-1;
       var b=mkBuilding(s);
-      b.position.set(s*(8+Math.random()*5),0,-Math.random()*RL);
+      b.position.set(s*(11+Math.random()*5),0,-Math.random()*RL);
       scene.add(b); blds.push(b);
     }
     // Fixed map pattern - repeating sections
