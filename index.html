@@ -1381,8 +1381,10 @@ waitForThree(function(){
   // Show mobile controls only on touch devices
   var isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
   if(isMobile){
-    document.querySelector('.mobile-controls').style.display = 'flex';
-    document.getElementById('ld-mobile').textContent = '모바일은 끊길 수 있어요... 웹페이지에서 해주세요!';
+    // 모바일은 게임 차단 - 웹으로 유도
+    document.getElementById('open-game').onclick = function(){
+      alert('PC 웹페이지에서 실행해주세요!');
+    };
   }
 
   // Mobile buttons
