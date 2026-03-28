@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>마이클 - Mycle</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
+  background: #E8EAED;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ===== iPhone ===== */
+.phone {
+  width: 280px; height: 590px;
+  background: #111;
+  border-radius: 42px;
+  padding: 8px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.35), inset 0 0 4px rgba(255,255,255,0.05);
+  position: relative;
+  flex-shrink: 0;
+}
+.phone-screen {
+  width: 100%; height: 100%;
+  border-radius: 34px;
+  overflow: hidden;
+  background: #F2F3F5;
+  position: relative;
+}
+.notch {
+  position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+  width: 80px; height: 22px;
+  background: #111; border-radius: 12px;
+  z-index: 500;
+}
+.home-bar {
+  position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%);
+  width: 100px; height: 4px;
+  background: #222; border-radius: 2px;
+  z-index: 500;
+}
+
+/* ===== App Screen ===== */
+#app {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  background: #fff;
+}
+.s-bar {
+  padding: 36px 16px 4px;
+  display: flex; justify-content: space-between;
+  font-size: 10px; font-weight: 600; color: #333;
+  background: #fff; flex-shrink: 0;
+}
+.top-icons {
+  display: flex; justify-content: flex-end; gap: 10px;
+  padding: 4px 14px 6px;
+  font-size: 9px; color: #444; background: #fff; flex-shrink: 0;
+}
+.nav-tabs {
+  display: flex; border-bottom: 1px solid #eee;
+  background: #fff; flex-shrink: 0;
+}
+.nav-tabs span {
+  flex: 1; text-align: center; padding: 8px 0;
+  font-size: 10px; color: #aaa; font-weight: 500;
+}
+.nav-tabs span.on {
+  color: #222; font-weight: 700;
+  border-bottom: 2px solid #222;
+}
+
+/* Scroll area */
+.feed {
+  flex: 1; overflow-y: auto; padding: 8px 10px 60px;
+  display: flex; flex-direction: column; gap: 8px;
+  background: #F2F3F5;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Mini game banner */
+.game-banner {
+  background: linear-gradient(135deg, #6C3CE0 0%, #FF6B35 50%, #FF3C7A 100%);
+  background-size: 200% 200%;
+  animation: bannerGlow 3s ease-in-out infinite;
+  border-radius: 16px;
+  padding: 20px 16px;
+  min-height: 80px;
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(108,60,224,0.35), 0 0 30px rgba(255,107,53,0.15);
+  border: 1px solid rgba(255,255,255,0.15);
+  position: relative;
+  overflow: hidden;
+}
+.game-banner::before {
+  content: ''; position: absolute; top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%);
+  animation: bannerShine 3s ease-in-out infinite;
+}
+@keyframes bannerGlow {
+  0%,100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+@keyframes bannerShine {
+  0%,100% { transform: translate(-30%,-30%); }
+  50% { transform: translate(30%,30%); }
+}
+.game-banner:active { transform: scale(0.97); }
+.game-banner .tags { display: flex; gap: 4px; margin-bottom: 6px; position: relative; z-index: 1; }
+.game-banner .tag {
+  font-size: 7px; font-weight: 700; color: #fff;
+  background: rgba(255,255,255,0.2);
+  padding: 2px 8px; border-radius: 8px;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,0.15);
+}
+.game-banner .tag.hot { background: #FF6B35; border-color: #FF6B35; }
+.game-banner .tag.gift { background: #E040A0; border-color: #E040A0; }
+.game-banner h3 { font-size: 14px; font-weight: 900; color: #fff; position: relative; z-index: 1; text-shadow: 0 1px 8px rgba(0,0,0,0.2); }
+.game-banner p { font-size: 9px; color: rgba(255,255,255,0.9); margin-top: 2px; position: relative; z-index: 1; }
+.game-banner .car {
+  font-size: 34px; position: relative; z-index: 1;
+  animation: bounce 1.2s ease-in-out infinite;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+}
+@keyframes bounce {
+  0%,100%{ transform: translateY(0); }
+  50%{ transform: translateY(-3px); }
+}
+
+/* Tire banner */
+.tire-box {
+  background: linear-gradient(135deg, #E8F4FD, #D0E8FA);
+  border-radius: 12px; padding: 12px 14px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.tire-box h4 { font-size: 12px; font-weight: 700; color: #222; }
+.tire-box p { font-size: 9px; color: #888; margin-top: 1px; }
+.tire-box .ico { font-size: 26px; }
+
+/* Card */
+.card {
+  background: #fff; border-radius: 12px; padding: 12px;
+}
+.card .km-label { font-size: 9px; color: #888; }
+.card .km { font-size: 18px; font-weight: 800; color: #222; margin-top: 1px; }
+.card .car-pic { text-align: center; font-size: 44px; margin: 6px 0; }
+.card .mng-label { font-size: 8px; color: #999; margin-top: 4px; }
+.card .mng-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 6px; padding-top: 6px; border-top: 1px solid #f0f0f0;
+}
+.card .mng-row .left { display: flex; align-items: center; gap: 6px; }
+.card .mng-row .dot {
+  width: 24px; height: 24px; border-radius: 12px;
+  background: #FFF5E6; display: flex; align-items: center;
+  justify-content: center; font-size: 12px;
+}
+.card .mng-row .t1 { font-size: 9px; font-weight: 600; color: #222; }
+.card .mng-row .t2 { font-size: 7px; color: #999; }
+.card .mng-row .rec-btn {
+  padding: 3px 8px; border-radius: 10px;
+  background: #E8F4FD; border: none;
+  font-size: 8px; font-weight: 600; color: #4A90D9;
+}
+
+/* Service */
+.svc-title {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 8px;
+}
+.svc-title h4 { font-size: 12px; font-weight: 800; }
+.svc-title span { font-size: 8px; color: #999; }
+.svc-grid {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  gap: 4px; text-align: center;
+}
+.svc-grid .box {
+  width: 32px; height: 32px; border-radius: 10px;
+  background: #F5F5F5; margin: 0 auto 3px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; position: relative;
+}
+.svc-grid .stag {
+  position: absolute; top: -3px; left: 50%; transform: translateX(-50%);
+  font-size: 5px; font-weight: 700; color: #fff;
+  padding: 1px 3px; border-radius: 3px; white-space: nowrap;
+}
+.stag.r { background: #FF4757; }
+.stag.b { background: #4A90D9; }
+.stag.o { background: #FF6B35; }
+.svc-grid .sl { font-size: 7px; color: #555; }
+
+/* Bottom actions */
+.bot-btns {
+  display: flex; background: #fff; border-radius: 10px; overflow: hidden;
+}
+.bot-btns button {
+  flex: 1; padding: 8px; border: none; background: #fff;
+  font-size: 9px; font-weight: 600; color: #555;
+  display: flex; align-items: center; justify-content: center; gap: 3px;
+}
+.bot-btns button + button { border-left: 1px solid #f0f0f0; }
+
+/* Tab bar */
+.tab-bar {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: #fff; border-top: 1px solid #eee;
+  display: flex; padding: 4px 0 18px;
+  z-index: 100;
+}
+.tab-bar .ti { flex: 1; text-align: center; }
+.tab-bar .ti .ic { font-size: 13px; }
+.tab-bar .ti .lb { font-size: 6px; color: #999; }
+.tab-bar .ti.on .lb { color: #222; font-weight: 600; }
+.tab-bar .badge {
+  position: absolute; top: -1px; right: calc(50% - 14px);
+  background: #FF4757; color: #fff;
+  font-size: 6px; font-weight: 700;
+  padding: 0 3px; border-radius: 5px;
+}
+
+/* ===== Game Screen ===== */
+#game {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 400; display: none;
+  background: #87CEEB;
+}
+#game canvas {
+  position: absolute; top: 0; left: 0;
+  width: 100% !important; height: 100% !important;
+  z-index: 1;
+}
+#game-hud {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 30;
+}
+.hud-back {
+  position: absolute; top: 36px; left: 10px;
+  width: 26px; height: 26px; border-radius: 13px;
+  background: rgba(0,0,0,0.3); border: none;
+  font-size: 13px; color: #fff;
+  pointer-events: all; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.hud-bgm {
+  position: absolute; top: 36px; right: 10px;
+  width: 26px; height: 26px; border-radius: 13px;
+  background: rgba(0,0,0,0.3); border: none;
+  font-size: 12px; color: #fff;
+  pointer-events: all; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.hud-bgm.muted { opacity: 0.4; }
+.hud-score {
+  position: absolute; top: 38px; left: 50%; transform: translateX(-50%);
+  font-size: 20px; font-weight: 900; color: #fff;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
+}
+.hud-dist {
+  position: absolute; top: 62px; left: 50%; transform: translateX(-50%);
+  font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.8);
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+/* Mobile controls */
+.mobile-controls {
+  position: absolute; bottom: 30px; left: 0; width: 100%;
+  display: none; justify-content: space-between;
+  padding: 0 24px; box-sizing: border-box;
+  pointer-events: none; z-index: 30;
+}
+.mobile-controls button {
+  pointer-events: all;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: rgba(255,255,255,0.8);
+  font-size: 22px; font-weight: 300;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.1s, transform 0.1s;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.mobile-controls button:active {
+  background: rgba(255,255,255,0.35);
+  transform: scale(0.9);
+}
+
+/* Start overlay */
+#game-intro {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(180deg, #3A7BD5, #87CEEB 50%, #7EC886);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  z-index: 20;
+}
+#game-intro h1 {
+  font-size: 26px; font-weight: 900; color: #fff;
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.15);
+}
+#game-intro .sub { font-size: 11px; color: rgba(255,255,255,0.75); margin: 4px 0 30px; }
+#game-intro .go-btn {
+  padding: 12px 40px; font-size: 16px; font-weight: 800;
+  background: #FF6B35; color: #fff; border: none; border-radius: 28px;
+  box-shadow: 0 6px 20px rgba(255,107,53,0.4);
+  cursor: pointer; letter-spacing: 1px;
+}
+#game-intro .hint { font-size: 9px; color: rgba(255,255,255,0.5); margin-top: 14px; }
+
+/* Countdown overlay */
+#game-countdown {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.7); backdrop-filter: blur(2px);
+  display: none; flex-direction: column;
+  align-items: center; justify-content: center;
+  z-index: 25;
+}
+#game-countdown .cd-num {
+  font-size: 100px; font-weight: 900; color: #fff;
+  text-shadow: 0 4px 20px rgba(255,107,53,0.6);
+  animation: cdPop 0.4s ease-out;
+}
+@keyframes cdPop {
+  0% { transform: scale(2); opacity: 0; }
+  60% { transform: scale(0.9); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Game over overlay */
+#game-end {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5); backdrop-filter: blur(3px);
+  display: none; flex-direction: column;
+  align-items: center; justify-content: center;
+  z-index: 20;
+}
+#game-end .box {
+  background: #fff; border-radius: 18px; padding: 22px 24px;
+  text-align: center; width: 240px;
+}
+#game-end h2 { font-size: 16px; color: #333; }
+#game-end .fs { font-size: 34px; font-weight: 900; color: #FF6B35; margin: 2px 0; }
+#game-end .fd { font-size: 10px; color: #999; margin-bottom: 16px; }
+#game-end .retry {
+  display: block; width: 100%; padding: 10px;
+  font-size: 13px; font-weight: 700;
+  background: #4A90D9; color: #fff; border: none; border-radius: 18px;
+  cursor: pointer; margin-bottom: 6px;
+}
+#game-end .ranking {
+  margin: 12px 0; text-align: left;
+}
+#game-end .ranking h3 {
+  font-size: 9px; color: #aaa; font-weight: 800;
+  margin-bottom: 8px; text-align: center; letter-spacing: 2px;
+  text-transform: uppercase;
+}
+#game-end .rank-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 7px 10px; border-radius: 10px; margin-bottom: 4px;
+  background: #f9f9f9; border: 1px solid #e0e0e0;
+}
+#game-end .rank-row.gold { background: linear-gradient(135deg, #FFF9E6, #FFF3CD); border: 1px solid #FFE082; }
+#game-end .rank-row.silver { background: linear-gradient(135deg, #F8F9FA, #ECEFF1); border: 1px solid #CFD8DC; }
+#game-end .rank-row.bronze { background: linear-gradient(135deg, #FFF4EC, #FFE8D6); border: 1px solid #FFCC80; }
+#game-end .rank-left { display: flex; align-items: center; gap: 10px; }
+#game-end .rank-medal { font-size: 16px; width: 20px; text-align: center; }
+#game-end .rank-num { font-size: 11px; font-weight: 800; color: #aaa; width: 20px; text-align: center; }
+#game-end .rank-name { font-size: 11px; font-weight: 700; color: #333; }
+#game-end .rank-score { font-size: 12px; font-weight: 800; color: #FF6B35; }
+#game-end .promo {
+  font-size: 9px; color: #888; margin-top: 10px;
+  line-height: 1.4;
+}
+#game-end .promo b {
+  color: #FF6B35; font-weight: 900;
+}
+#game-end .quit {
+  display: block; width: 100%; padding: 8px;
+  font-size: 11px; font-weight: 600;
+  background: none; color: #999; border: 1px solid #ddd; border-radius: 14px;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <div class="phone-screen">
+    <div class="notch"></div>
+    <div class="home-bar"></div>
+
+    <!-- ===== APP ===== -->
+    <div id="app">
+      <div class="s-bar">
+        <span>12:51</span>
+        <span style="font-size:9px;">LTE &nbsp; 76%</span>
+      </div>
+      <div class="top-icons">
+        <span>&#x1F3AB; 쿠폰함</span>
+        <span>&#x1F504; 데이터연동</span>
+        <span>&#x25BC; 차 변경</span>
+      </div>
+      <div class="nav-tabs">
+        <span class="on">내 차 정보</span>
+        <span>기록</span>
+        <span>통계</span>
+        <span>점검일정</span>
+      </div>
+
+      <div class="feed">
+        <!-- Mini game -->
+        <div class="game-banner" id="open-game">
+          <div>
+            <div class="tags">
+              <span class="tag hot">GAME</span>
+              <span class="tag">NEW</span>
+              <span class="tag gift">&#x1F381; 상품증정</span>
+            </div>
+            <h3>불법주차 레이싱</h3>
+            <p>불법주차를 피해 달려보세요!</p>
+          </div>
+          <div class="car">&#x1F3CE;&#xFE0F;</div>
+        </div>
+
+        <!-- Tire -->
+        <div class="tire-box">
+          <div>
+            <h4>타이어 최저가 도전!</h4>
+            <p>더 싼 곳 찾으면 보상해드려요</p>
+          </div>
+          <span class="ico">&#x1F6DE;</span>
+        </div>
+
+        <!-- Car card -->
+        <div class="card">
+          <div class="km-label">예상주행거리</div>
+          <div class="km">39,394km &#x270F;&#xFE0F;</div>
+          <div class="car-pic">&#x1F697;</div>
+          <div class="mng-label">관리 중인 항목</div>
+          <div class="mng-row">
+            <div class="left">
+              <div class="dot">&#x1F6E2;&#xFE0F;</div>
+              <div>
+                <div class="t1">엔진오일 및 오일필터</div>
+                <div class="t2">교체일까지 ??일 남음</div>
+              </div>
+            </div>
+            <button class="rec-btn">기록하기</button>
+          </div>
+        </div>
+
+        <!-- Service -->
+        <div class="card">
+          <div class="svc-title">
+            <h4>정비소 예약</h4>
+            <span>전체보기 &gt;</span>
+          </div>
+          <div class="svc-grid">
+            <div>
+              <div class="box">&#x1F6E2;&#xFE0F;<span class="stag r">1만원할인</span></div>
+              <div class="sl">엔진오일</div>
+            </div>
+            <div>
+              <div class="box">&#x1F6DE;<span class="stag b">첫교체혜택</span></div>
+              <div class="sl">타이어</div>
+            </div>
+            <div>
+              <div class="box">&#x1F6BF;<span class="stag o">오픈할인</span></div>
+              <div class="sl">실내외세차</div>
+            </div>
+            <div>
+              <div class="box">&#x1F527;</div>
+              <div class="sl">내차점검</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bot-btns">
+          <button>&#x1F4CB; 정비 내역</button>
+          <button>&#x1F3AB; 쿠폰함</button>
+        </div>
+      </div>
+
+      <div class="tab-bar">
+        <div class="ti on"><div class="ic">&#x1F3E0;</div><div class="lb">홈</div></div>
+        <div class="ti"><div class="ic">&#x1F527;</div><div class="lb">정비 예약</div></div>
+        <div class="ti"><div class="ic">&#x1F4CB;</div><div class="lb">정비 목록</div></div>
+        <div class="ti" style="position:relative;"><div class="ic">&#x1F514;</div><div class="lb">알림</div><span class="badge">19</span></div>
+        <div class="ti"><div class="ic">&#x2022;&#x2022;&#x2022;</div><div class="lb">더보기</div></div>
+      </div>
+    </div>
+
+    <!-- ===== GAME ===== -->
+    <div id="game">
+      <div id="game-hud">
+        <button class="hud-back" id="btn-back">&#x2190;</button>
+        <button class="hud-bgm" id="btn-bgm">&#x266A;</button>
+        <div class="hud-score" id="hud-score">0</div>
+        <div class="hud-dist" id="hud-dist">0m</div>
+      </div>
+      <div id="game-intro">
+        <h1>불법주차 레이싱</h1>
+        <p class="sub">불법주차를 피해 달려보세요!</p>
+        <button class="go-btn" id="btn-start">START</button>
+        <p class="hint">&#x2B05; &#x27A1; 좌우 화살표키로 조작</p>
+      </div>
+      <div id="game-countdown">
+        <div class="cd-num" id="cd-num">3</div>
+      </div>
+      <div id="game-end">
+        <div class="box">
+          <h2>Game Over</h2>
+          <div class="fs" id="e-score">0</div>
+          <div class="fd" id="e-dist">0m 주행</div>
+          <div class="ranking">
+            <h3>RANKING</h3>
+            <div class="rank-row gold">
+              <div class="rank-left"><span class="rank-medal">&#x1F947;</span><span class="rank-name">Soy</span></div>
+              <span class="rank-score">1,250</span>
+            </div>
+            <div class="rank-row silver">
+              <div class="rank-left"><span class="rank-medal">&#x1F948;</span><span class="rank-name">Bay</span></div>
+              <span class="rank-score">980</span>
+            </div>
+            <div class="rank-row bronze">
+              <div class="rank-left"><span class="rank-medal">&#x1F949;</span><span class="rank-name">Ethan</span></div>
+              <span class="rank-score">720</span>
+            </div>
+            <div class="rank-row">
+              <div class="rank-left"><span class="rank-num">4</span><span class="rank-name">Evan</span></div>
+              <span class="rank-score">540</span>
+            </div>
+          </div>
+          <button class="retry" id="btn-retry">다시 하기</button>
+          <button class="quit" id="btn-quit">나가기</button>
+          <p class="promo">&#x1F527; 정비소를 이용하시면 <b>이어서 하기</b> 쿠폰을 드려요!</p>
+          <p class="promo">&#x1F3C6; 1등 상품 : <b style="color:#00835F;">스타벅스 3만원</b></p>
+          <p class="promo" style="color:#aaa; font-size:8px;">매주 월요일 초기화됩니다</p>
+        </div>
+      </div>
+      <div class="mobile-controls">
+        <button id="btn-left">&#x276E;</button>
+        <button id="btn-right">&#x276F;</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+window.THREE = THREE;
+window.GLTFLoader = GLTFLoader;
+window.dispatchEvent(new Event('three-ready'));
+</script>
+<script>
+function waitForThree(fn){
+  if(window.THREE && window.GLTFLoader) fn();
+  else window.addEventListener('three-ready', fn);
+}
+waitForThree(function(){
+  var THREE = window.THREE;
+  var GLTFLoader = window.GLTFLoader;
+
+  // === Sound System ===
+  var audioCtx = null;
+  var bgm = null;
+  function initAudio(){ if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }
+  var bgmMuted = false;
+  function playBGM(){
+    if(bgmMuted) return;
+    if(!bgm){
+      bgm = new Audio('bgm.mp3');
+      bgm.loop = true;
+      bgm.volume = 0.4;
+    }
+    bgm.currentTime = 0;
+    bgm.play().catch(function(){});
+  }
+  function stopBGM(){ if(bgm){ bgm.pause(); bgm.currentTime=0; } }
+  function toggleBGM(){
+    bgmMuted = !bgmMuted;
+    var btn = document.getElementById('btn-bgm');
+    if(bgmMuted){
+      btn.classList.add('muted');
+      if(bgm) bgm.pause();
+    } else {
+      btn.classList.remove('muted');
+      if(running && bgm) bgm.play().catch(function(){});
+    }
+  }
+  function playSound(freq, dur, type, vol){
+    if(!audioCtx) return;
+    var osc=audioCtx.createOscillator();
+    var gain=audioCtx.createGain();
+    osc.type=type||'sine';
+    osc.frequency.value=freq;
+    gain.gain.setValueAtTime(vol||0.15, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime+dur);
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(); osc.stop(audioCtx.currentTime+dur);
+  }
+  function coinSound(){ playSound(880,0.12,'sine',0.15); setTimeout(function(){playSound(1100,0.15,'sine',0.12);},80); }
+  function crashSound(){ playSound(150,0.3,'sawtooth',0.2); playSound(100,0.4,'square',0.1); }
+  function hornSound(){
+    if(!audioCtx) return;
+    // car horn: two overlapping tones
+    var o1=audioCtx.createOscillator(), g1=audioCtx.createGain();
+    o1.type='square'; o1.frequency.value=480;
+    g1.gain.setValueAtTime(0.18, audioCtx.currentTime);
+    g1.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime+0.35);
+    o1.connect(g1); g1.connect(audioCtx.destination);
+    o1.start(); o1.stop(audioCtx.currentTime+0.35);
+    var o2=audioCtx.createOscillator(), g2=audioCtx.createGain();
+    o2.type='sawtooth'; o2.frequency.value=380;
+    g2.gain.setValueAtTime(0.12, audioCtx.currentTime);
+    g2.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime+0.35);
+    o2.connect(g2); g2.connect(audioCtx.destination);
+    o2.start(); o2.stop(audioCtx.currentTime+0.35);
+  }
+
+  // === Coin Particles ===
+  var particles = [];
+  function spawnCoinParticles(pos){
+    var pMat=new THREE.MeshBasicMaterial({color:0xFFD700});
+    for(var i=0;i<8;i++){
+      var p=new THREE.Mesh(new THREE.SphereGeometry(0.1,4,4),pMat);
+      p.position.copy(pos);
+      p.userData.vel=new THREE.Vector3((Math.random()-0.5)*0.3, Math.random()*0.3+0.1, (Math.random()-0.5)*0.3);
+      p.userData.life=0.5;
+      scene.add(p); particles.push(p);
+    }
+  }
+  function updateParticles(dt){
+    for(var i=particles.length-1;i>=0;i--){
+      var p=particles[i];
+      p.position.add(p.userData.vel);
+      p.userData.vel.y-=0.015;
+      p.userData.life-=dt||0.016;
+      p.scale.setScalar(Math.max(0,p.userData.life*2));
+      if(p.userData.life<=0){scene.remove(p);particles.splice(i,1);}
+    }
+  }
+
+  // State
+  let inited = false, running = false, overShown = false;
+  let sc = 0, dist = 0, spd = 10, lane = 1, targetX = 0;
+  let obs = [], cns = [], trs = [], segs = [], clds = [], blds = [];
+  let renderer, scene, camera, player;
+  var carModelLoaded = null; // cached GLB model
+  var obsModelLoaded = null; // cached obstacle GLB model
+  var treeModelLoaded = null; // cached tree GLB model
+  var houseModelLoaded = null; // cached house GLB model
+  var house2ModelLoaded = null; // cached house2 GLB model
+  var cloudModelLoaded = null; // cached cloud GLB model
+
+  const LW = 2.2, LANES = [-LW, 0, LW], RL = 2000;
+  const coinMat = new THREE.MeshPhongMaterial({color:0xFFD700,shininess:100,emissive:0x886600});
+
+  // DOM
+  const elApp = document.getElementById('app');
+  const elGame = document.getElementById('game');
+  const elIntro = document.getElementById('game-intro');
+  const elEnd = document.getElementById('game-end');
+  const elScore = document.getElementById('hud-score');
+  const elDist = document.getElementById('hud-dist');
+  const elCountdown = document.getElementById('game-countdown');
+  const elCdNum = document.getElementById('cd-num');
+
+  // Buttons
+  document.getElementById('open-game').onclick = openGame;
+  document.getElementById('btn-back').onclick = closeGame;
+  document.getElementById('btn-bgm').onclick = toggleBGM;
+  document.getElementById('btn-start').onclick = startGame;
+  document.getElementById('btn-retry').onclick = restart;
+  document.getElementById('btn-quit').onclick = closeGame;
+
+  function openGame(){
+    elApp.style.display = 'none';
+    elGame.style.display = 'block';
+    elIntro.style.display = 'none';
+    elEnd.style.display = 'none';
+    elCountdown.style.display = 'none';
+    initAudio();
+    // Init game then start countdown
+    setTimeout(function(){
+      initGame();
+      // 항상 게임 상태 초기화
+      resetGameState();
+      startCountdown();
+    }, 50);
+  }
+  function resetGameState(){
+    sc=0; dist=0; spd=10; lane=1; targetX=0;
+    running=false; overShown=false;
+    if(player) player.position.x=0;
+    obs.forEach(function(o){scene.remove(o);}); obs=[];
+    cns.forEach(function(c){scene.remove(c);}); cns=[];
+    mapLoopOffset=0;
+    buildMap();
+    elEnd.style.display='none';
+    elScore.textContent='0';
+    elDist.textContent='0m';
+  }
+  function startCountdown(){
+    elCountdown.style.display = 'flex';
+    var count = 3;
+    function tick(){
+      elCdNum.textContent = count;
+      // re-trigger animation
+      elCdNum.style.animation = 'none';
+      void elCdNum.offsetWidth;
+      elCdNum.style.animation = 'cdPop 0.4s ease-out';
+      hornSound();
+      count--;
+      if(count > 0){
+        setTimeout(tick, 1000);
+      } else {
+        setTimeout(function(){
+          elCountdown.style.display = 'none';
+          running = true; overShown = false; playBGM();
+        }, 1000);
+      }
+    }
+    tick();
+  }
+  function closeGame(){
+    running = false; stopBGM();
+    elGame.style.display = 'none';
+    elApp.style.display = 'flex';
+  }
+  function startGame(){
+    elIntro.style.display = 'none';
+    running = true; overShown = false;
+    initAudio();
+  }
+  function restart(){
+    resetGameState();
+    running = true; overShown = false;
+  }
+
+  function initGame(){
+    if(inited) return;
+    inited = true;
+
+    var w = elGame.clientWidth, h = elGame.clientHeight;
+
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x87CEEB);
+    scene.fog = new THREE.Fog(0x87CEEB, 80, 180);
+
+    camera = new THREE.PerspectiveCamera(65, w/h, 0.1, 200);
+    camera.position.set(0,5.5,12);
+    camera.lookAt(0,0.5,-15);
+
+    renderer = new THREE.WebGLRenderer({antialias:true});
+    renderer.setSize(w,h);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+    renderer.shadowMap.enabled = true;
+    renderer.domElement.style.position = 'absolute';
+    renderer.domElement.style.top = '0';
+    renderer.domElement.style.left = '0';
+    renderer.domElement.style.zIndex = '1';
+    elGame.insertBefore(renderer.domElement, elGame.firstChild);
+
+    // Bright sunny lighting
+    scene.add(new THREE.AmbientLight(0xffffff,1.0));
+    var dl = new THREE.DirectionalLight(0xFFFAE6,1.2);
+    dl.position.set(10,30,20); dl.castShadow=true;
+    dl.shadow.camera.far=100; dl.shadow.mapSize.set(1024,1024);
+    scene.add(dl);
+    // Fill light from front
+    var fl = new THREE.DirectionalLight(0xADD8E6,0.4);
+    fl.position.set(0,10,-20);
+    scene.add(fl);
+    // Hemisphere light for natural sky-ground bounce
+    var hl = new THREE.HemisphereLight(0x87CEEB,0x68BB59,0.5);
+    scene.add(hl);
+
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.3;
+
+    var roadM = new THREE.MeshLambertMaterial({color:0x666666});
+    var grassM = new THREE.MeshLambertMaterial({color:0x7ECB56});
+    var whiteM = new THREE.MeshLambertMaterial({color:0xffffff});
+
+    var road = new THREE.Mesh(new THREE.PlaneGeometry(8,RL),roadM);
+    road.rotation.x=-Math.PI/2; road.position.set(0,0.01,-RL/2+10);
+    road.receiveShadow=true; scene.add(road); segs.push(road);
+
+    for(var z=-RL;z<20;z+=4){
+      var ln=new THREE.Mesh(new THREE.PlaneGeometry(0.15,2),whiteM);
+      ln.rotation.x=-Math.PI/2; ln.position.set(0,0.02,z);
+      scene.add(ln); segs.push(ln);
+    }
+    [-3.8,3.8].forEach(function(x){
+      var sl=new THREE.Mesh(new THREE.PlaneGeometry(0.12,RL),whiteM);
+      sl.rotation.x=-Math.PI/2; sl.position.set(x,0.02,-RL/2+10);
+      scene.add(sl); segs.push(sl);
+    });
+    [-12,12].forEach(function(x){
+      var g=new THREE.Mesh(new THREE.PlaneGeometry(20,RL+100),grassM);
+      g.rotation.x=-Math.PI/2; g.position.set(x,0,-RL/2+10);
+      g.receiveShadow=true; scene.add(g);
+    });
+    var railM=new THREE.MeshLambertMaterial({color:0xCCCCCC});
+    [-4.5,4.5].forEach(function(x){
+      for(var z=-RL;z<20;z+=6){
+        var p=new THREE.Mesh(new THREE.BoxGeometry(0.1,0.6,0.1),railM);
+        p.position.set(x,0.3,z); scene.add(p);
+      }
+    });
+
+
+    // Player: use GLB model, fallback to box car
+    player = mkPlayer(); player.position.set(0,0,5); scene.add(player);
+    var loader = new GLTFLoader();
+    loader.load('car.glb', function(gltf){
+      carModelLoaded = gltf.scene;
+      carModelLoaded.scale.set(2.2,2.2,2.2);
+      carModelLoaded.rotation.set(0, -Math.PI/2, 0);
+      carModelLoaded.position.y = 1.0;
+      carModelLoaded.traverse(function(child){
+        if(child.isMesh){ child.castShadow=true; }
+      });
+      // replace box player with GLB
+      player.clear();
+      player.add(carModelLoaded.clone());
+
+      // Load obstacle model (pink toy car)
+      console.log('[MycleGame] obstacle.glb 로딩 시작...');
+      loader.load('obstacle.glb', function(gltf2){
+        console.log('[MycleGame] obstacle.glb 로딩 완료!');
+        obsModelLoaded = gltf2.scene;
+        obsModelLoaded.scale.set(3.0,3.0,3.0);
+        obsModelLoaded.rotation.set(0, Math.PI/2, 0);
+        obsModelLoaded.position.y = 0.65;
+        obsModelLoaded.traverse(function(child){
+          if(child.isMesh){ child.castShadow=true; }
+        });
+        // Rebuild map with new obstacle model
+        obs.forEach(function(o){scene.remove(o);}); obs=[];
+        cns.forEach(function(c){scene.remove(c);}); cns=[];
+        mapLoopOffset=0;
+        buildMap();
+      });
+
+      // Load tree model
+      console.log('[MycleGame] tree.glb 로딩 시작...');
+      loader.load('tree.glb', function(gltf3){
+        console.log('[MycleGame] tree.glb 로딩 완료!');
+        treeModelLoaded = gltf3.scene;
+        treeModelLoaded.scale.set(8.0,8.0,8.0);
+        treeModelLoaded.traverse(function(child){
+          if(child.isMesh){ child.castShadow=true; }
+        });
+        // Replace existing trees with GLB model
+        trs.forEach(function(t){ scene.remove(t); });
+        trs=[];
+        for(var i=0;i<400;i++){
+          var t=mkTree(); var s=Math.random()>0.5?1:-1;
+          var dist= 7 + Math.random()*10;
+          t.position.set(s*dist, 0, -Math.random()*RL);
+          scene.add(t); trs.push(t);
+        }
+      });
+
+      // Load house model
+      console.log('[MycleGame] house.glb 로딩 시작...');
+      loader.load('house.glb', function(gltf4){
+        console.log('[MycleGame] house.glb 로딩 완료!');
+        houseModelLoaded = gltf4.scene;
+        houseModelLoaded.scale.set(12.0,20.0,12.0);
+        houseModelLoaded.traverse(function(child){
+          if(child.isMesh){ child.castShadow=true; }
+        });
+        // Replace existing buildings with GLB model
+        blds.forEach(function(b){ scene.remove(b); });
+        blds=[];
+        for(var i=0;i<400;i++){
+          var s=Math.random()>0.5?1:-1;
+          var b=mkBuilding(s);
+          b.position.set(s*(8+Math.random()*5),0,-Math.random()*RL);
+          scene.add(b); blds.push(b);
+        }
+      });
+
+      // Load house2 model
+      console.log('[MycleGame] house2.glb 로딩 시작...');
+      loader.load('house2.glb', function(gltf6){
+        console.log('[MycleGame] house2.glb 로딩 완료!');
+        house2ModelLoaded = gltf6.scene;
+        house2ModelLoaded.scale.set(12.0,20.0,12.0);
+        house2ModelLoaded.traverse(function(child){
+          if(child.isMesh){ child.castShadow=true; }
+        });
+        // Add more buildings with house2
+        for(var i=0;i<300;i++){
+          var s=Math.random()>0.5?1:-1;
+          var b=mkBuilding2(s);
+          b.position.set(s*(8+Math.random()*5),0,-Math.random()*RL);
+          scene.add(b); blds.push(b);
+        }
+      });
+
+      // Load cloud model
+      console.log('[MycleGame] cloud_new.glb 로딩 시작...');
+      loader.load('cloud_new.glb', function(gltf5){
+        console.log('[MycleGame] cloud_new.glb 로딩 완료!');
+        cloudModelLoaded = gltf5.scene;
+        cloudModelLoaded.scale.set(4.0,4.0,4.0);
+        cloudModelLoaded.traverse(function(child){
+          if(child.isMesh){ child.castShadow=false; }
+        });
+        // Replace existing clouds
+        clds.forEach(function(c){ scene.remove(c); });
+        clds=[];
+        for(var i=0;i<3;i++){
+          var c=mkCloud();
+          var px=-25+Math.random()*50, py=20+Math.random()*8, pz=-40-i*12-Math.random()*15;
+          c.position.set(px,py,pz);
+          scene.add(c); clds.push(c);
+        }
+      });
+    });
+
+    for(var i=0;i<500;i++){
+      var t=mkTree(); var s=Math.random()>0.5?1:-1;
+      var dist= 8 + Math.random()*10;
+      t.position.set(s*dist, 0, -Math.random()*RL);
+      scene.add(t); trs.push(t);
+    }
+    // Load cloud GLB, fallback to sphere clouds
+    // Placeholder clouds — will be replaced by GLB
+    var cloudPositions=[];
+    for(var i=0;i<10;i++){
+      var c=mkCloud();
+      var px=-25+Math.random()*50, py=20+Math.random()*8, pz=-40-i*12-Math.random()*15;
+      c.position.set(px,py,pz);
+      scene.add(c); clds.push(c);
+      cloudPositions.push({x:px,y:py,z:pz,s:1});
+    }
+    for(var i=0;i<400;i++){
+      var s=Math.random()>0.5?1:-1;
+      var b=mkBuilding(s);
+      b.position.set(s*(8+Math.random()*5),0,-Math.random()*RL);
+      scene.add(b); blds.push(b);
+    }
+    // Fixed map pattern - repeating sections
+    buildMap();
+
+    animate();
+  }
+
+  function mkPlayer(){
+    var g=new THREE.Group();
+    var m=new THREE.MeshPhongMaterial({color:0x4A90D9,shininess:80});
+    var a=new THREE.MeshPhongMaterial({color:0xE8524A,shininess:60});
+    var b=new THREE.Mesh(new THREE.BoxGeometry(1.6,0.6,3),m);
+    b.position.y=0.5; b.castShadow=true; g.add(b);
+    var r=new THREE.Mesh(new THREE.BoxGeometry(1.3,0.5,1.6),m);
+    r.position.set(0,1,-0.1); r.castShadow=true; g.add(r);
+    var wm=new THREE.MeshPhongMaterial({color:0xAADDFF,opacity:0.7,transparent:true});
+    var w=new THREE.Mesh(new THREE.BoxGeometry(1.2,0.4,0.1),wm);
+    w.position.set(0,0.95,0.75); w.rotation.x=0.3; g.add(w);
+    var hm=new THREE.MeshPhongMaterial({color:0xFFFFAA,emissive:0xFFFF88});
+    var wt=new THREE.MeshLambertMaterial({color:0x222222});
+    [-0.5,0.5].forEach(function(x){
+      var hl=new THREE.Mesh(new THREE.SphereGeometry(0.12,8,8),hm);
+      hl.position.set(x,0.5,-1.5); g.add(hl);
+      var tl=new THREE.Mesh(new THREE.SphereGeometry(0.12,8,8),a);
+      tl.position.set(x,0.5,1.5); g.add(tl);
+    });
+    [[-0.8,0.25,-0.8],[0.8,0.25,-0.8],[-0.8,0.25,0.8],[0.8,0.25,0.8]].forEach(function(p){
+      var wh=new THREE.Mesh(new THREE.CylinderGeometry(0.25,0.25,0.2,12),wt);
+      wh.position.set(p[0],p[1],p[2]); wh.rotation.z=Math.PI/2; g.add(wh);
+    });
+    var lg=new THREE.Mesh(new THREE.BoxGeometry(0.5,0.5,0.05),new THREE.MeshPhongMaterial({color:0xffffff}));
+    lg.position.set(0,0.65,1.53); g.add(lg);
+    return g;
+  }
+  function mkObs(){
+    var g=new THREE.Group();
+    // Use obstacle GLB model (pink toy car), fallback to player car model
+    var model = obsModelLoaded || carModelLoaded;
+    if(model){
+      var clone=model.clone();
+      clone.traverse(function(child){
+        if(child.isMesh){ child.castShadow=true; }
+      });
+      // Flip 180 to face forward (show front to player)
+      var wrap=new THREE.Group();
+      wrap.add(clone);
+      wrap.rotation.y=Math.PI;
+      g.add(wrap);
+      return g;
+    }
+    var m=new THREE.MeshPhongMaterial({color:0xFF6B6B,shininess:60});
+    var b=new THREE.Mesh(new THREE.BoxGeometry(1.5,0.55,2.6),m);
+    b.position.y=0.5; b.castShadow=true; g.add(b);
+    var r=new THREE.Mesh(new THREE.BoxGeometry(1.2,0.45,1.3),m);
+    r.position.set(0,0.95,0); g.add(r);
+    var wt=new THREE.MeshLambertMaterial({color:0x222222});
+    [[-0.75,0.22,-0.7],[0.75,0.22,-0.7],[-0.75,0.22,0.7],[0.75,0.22,0.7]].forEach(function(p){
+      var w=new THREE.Mesh(new THREE.CylinderGeometry(0.22,0.22,0.18,10),wt);
+      w.position.set(p[0],p[1],p[2]); w.rotation.z=Math.PI/2; g.add(w);
+    });
+    return g;
+  }
+  function mkTree(){
+    var g=new THREE.Group();
+    if(treeModelLoaded){
+      var clone=treeModelLoaded.clone();
+      clone.traverse(function(child){
+        if(child.isMesh){ child.castShadow=true; }
+      });
+      var sc=5+Math.random()*4;
+      clone.scale.set(sc, sc, sc);
+      clone.position.y = 3.0;
+      g.add(clone);
+      return g;
+    }
+    var treeColors=[0x2E8B2E,0x3DA33D,0x4CAF50,0x45A049];
+    var tc=treeColors[Math.floor(Math.random()*treeColors.length)];
+    var h=1.2+Math.random()*0.8;
+    var tk=new THREE.Mesh(new THREE.CylinderGeometry(0.15,0.25,h,8),new THREE.MeshLambertMaterial({color:0x8B5A2B}));
+    tk.position.y=h/2; g.add(tk);
+    var leafMat=new THREE.MeshLambertMaterial({color:tc});
+    var baseY=h+0.3;
+    var sz=0.8+Math.random()*0.4;
+    var l1=new THREE.Mesh(new THREE.SphereGeometry(sz,8,8),leafMat);
+    l1.position.set(0,baseY+sz*0.5,0); g.add(l1);
+    var l2=new THREE.Mesh(new THREE.SphereGeometry(sz*0.7,8,8),leafMat);
+    l2.position.set(sz*0.4,baseY+sz*0.2,sz*0.3); g.add(l2);
+    var l3=new THREE.Mesh(new THREE.SphereGeometry(sz*0.6,8,8),leafMat);
+    l3.position.set(-sz*0.3,baseY+sz*0.7,0); g.add(l3);
+    return g;
+  }
+  function mkCloud(){
+    var g=new THREE.Group();
+    if(cloudModelLoaded){
+      var clone=cloudModelLoaded.clone();
+      var sc=10+Math.random()*5;
+      clone.scale.set(sc,sc,sc);
+      clone.rotation.y = -Math.PI/2;
+      g.add(clone);
+      return g;
+    }
+    var m=new THREE.MeshPhongMaterial({color:0xffffff, emissive:0xddeeff, emissiveIntensity:0.3, shininess:10});
+    // Fluffy cloud shape — multiple overlapping spheres
+    var parts=[
+      [0, 0, 0, 1.4],        // center big
+      [-1.1, -0.1, 0, 1.0],  // left
+      [1.1, -0.1, 0, 1.0],   // right
+      [-0.5, 0.5, 0, 0.9],   // top left
+      [0.5, 0.5, 0, 0.9],    // top right
+      [0, 0.7, 0, 0.7],      // top
+      [-1.6, -0.3, 0, 0.7],  // far left
+      [1.6, -0.3, 0, 0.7],   // far right
+      [0, -0.3, 0.3, 1.1],   // front
+      [0, -0.3, -0.3, 1.1],  // back
+    ];
+    for(var i=0;i<parts.length;i++){
+      var p=parts[i];
+      var s=new THREE.Mesh(new THREE.SphereGeometry(p[3],16,16),m);
+      s.position.set(p[0],p[1],p[2]);
+      g.add(s);
+    }
+    return g;
+  }
+  function mkBuilding2(side){
+    var g=new THREE.Group();
+    if(house2ModelLoaded){
+      var clone=house2ModelLoaded.clone();
+      clone.traverse(function(child){ if(child.isMesh) child.castShadow=true; });
+      var sc=8+Math.random()*5;
+      clone.scale.set(sc, sc*1.6, sc);
+      clone.position.y=4.0;
+      clone.rotation.y = (side||1) > 0 ? -Math.PI/4 : Math.PI/4;
+      g.add(clone);
+      return g;
+    }
+    return mkBuilding(side);
+  }
+  function mkBuilding(side){
+    var g=new THREE.Group();
+    if(houseModelLoaded){
+      var clone=houseModelLoaded.clone();
+      clone.traverse(function(child){ if(child.isMesh) child.castShadow=true; });
+      var sc=8+Math.random()*5;
+      clone.scale.set(sc, sc*1.6, sc);
+      clone.position.y=1.5;
+      // 정면+오른쪽이 도로쪽을 향하게 회전
+      // 오른쪽 집: 정면+오른쪽 보이게, 왼쪽 집: 정면+왼쪽 보이게 (도로쪽으로)
+      clone.rotation.y = (side||1) > 0 ? -Math.PI/4 : Math.PI/4;
+      g.add(clone);
+      return g;
+    }
+    var h=3+Math.random()*5;
+    var w=2+Math.random()*2;
+    var d=2+Math.random()*2;
+    var cs=[0xE8C9A0,0xD4A574,0xF5DEB3,0xDEB887,0xFFE4C4,0xE0C8A8];
+    var mat=new THREE.MeshLambertMaterial({color:cs[Math.floor(Math.random()*cs.length)]});
+    var body=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);
+    body.position.y=h/2; body.castShadow=true; g.add(body);
+    // Roof
+    var roofMat=new THREE.MeshLambertMaterial({color:0xCC4444});
+    var roof=new THREE.Mesh(new THREE.ConeGeometry(Math.max(w,d)*0.75,1.5,4),roofMat);
+    roof.position.y=h+0.75; roof.rotation.y=Math.PI/4; g.add(roof);
+    // Windows
+    var winMat=new THREE.MeshLambertMaterial({color:0x87CEEB});
+    for(var wy=2;wy<h-0.5;wy+=1.5){
+      var win=new THREE.Mesh(new THREE.PlaneGeometry(0.5,0.6),winMat);
+      win.position.set(w/2+0.01,wy,0); g.add(win);
+      var win2=new THREE.Mesh(new THREE.PlaneGeometry(0.5,0.6),winMat);
+      win2.position.set(-w/2-0.01,wy,0); win2.rotation.y=Math.PI; g.add(win2);
+    }
+    return g;
+  }
+  function spawnObs(){
+    var c=mkObs(); var l=Math.floor(Math.random()*3);
+    var z=-80-Math.random()*30;
+    // check if this lane is blocked near this z position (within 8 units)
+    var lanesBlocked = [false,false,false];
+    for(var i=0;i<obs.length;i++){
+      if(Math.abs(obs[i].position.z - z) < 8){
+        for(var j=0;j<3;j++){
+          if(Math.abs(obs[i].position.x - LANES[j]) < 1) lanesBlocked[j]=true;
+        }
+      }
+    }
+    // always keep at least 1 lane open
+    var open=[];
+    for(var j=0;j<3;j++){ if(!lanesBlocked[j]) open.push(j); }
+    if(open.length <= 1) return; // don't spawn if would block all lanes
+    // pick a lane from available ones
+    if(lanesBlocked[l]){
+      l = open[Math.floor(Math.random()*open.length)];
+    }
+    c.position.set(LANES[l],0,z);
+    c.userData={lane:l,speed:0.05+Math.random()*0.08};
+    scene.add(c); obs.push(c);
+  }
+  function spawnCoin(){
+    var c=new THREE.Mesh(new THREE.CylinderGeometry(0.35,0.35,0.1,16),coinMat);
+    c.rotation.x=Math.PI/2; var l=Math.floor(Math.random()*3);
+    c.position.set(LANES[l],1.2,-80-Math.random()*20);
+    scene.add(c); cns.push(c);
+  }
+  // Fixed map - always the same, gap between obstacles >= 6 units (car length ~3)
+  var FIXED_MAP = [
+    // Warm up: coins only
+    [-10,    [],     [1]],
+    [-20,    [],     [0,2]],
+    [-30,    [],     [1]],
+    [-40,    [],     [0,1,2]],
+    [-50,    [],     [0]],
+    [-60,    [],     [1,2]],
+    [-70,    [],     [0,1]],
+    [-80,    [],     [2]],
+    // Easy: 1 obstacle only
+    [-95,    [1],    [0,2]],
+    [-112,   [0],    [1,2]],
+    [-129,   [2],    [0,1]],
+    [-146,   [1],    [0]],
+    [-163,   [0],    [2]],
+    [-180,   [2],    [0,1]],
+    // Medium: max 2 obstacles (always 1 lane open)
+    [-200,   [0,1],  [2]],
+    [-218,   [2],    [0,1]],
+    [-236,   [1,2],  [0]],
+    [-254,   [0],    [1,2]],
+    [-272,   [0,2],  [1]],
+    [-290,   [1],    [0,2]],
+    [-308,   [0,1],  [2]],
+    [-326,   [2],    [0]],
+    [-344,   [1,2],  [0]],
+    [-362,   [0],    [1]],
+    [-380,   [0,2],  [1]],
+    [-400,   [1],    [0,2]],
+  ];
+  var mapLoopOffset = 0;
+  var MAP_TOTAL_LENGTH = 400;
+  // When looping, skip the warmup (start from index 4)
+  var MAP_LOOP_START_INDEX = 4;
+
+  function buildMap(){
+    spawnFixedMap(0);
+    spawnFixedMap(mapLoopOffset);
+  }
+
+  function spawnFixedMap(offset){
+    var startIdx = (offset===0) ? 0 : MAP_LOOP_START_INDEX;
+    for(var i=startIdx;i<FIXED_MAP.length;i++){
+      var row = FIXED_MAP[i];
+      var z = row[0] + offset;
+      var obsLanes = row[1];
+      var coinLanes = row[2];
+      for(var j=0;j<obsLanes.length;j++){
+        var c=mkObs();
+        c.position.set(LANES[obsLanes[j]], 0, z);
+        c.userData={lane:obsLanes[j], speed:0.06};
+        scene.add(c); obs.push(c);
+      }
+      for(var j=0;j<coinLanes.length;j++){
+        var cn=new THREE.Mesh(new THREE.CylinderGeometry(0.35,0.35,0.1,16),coinMat);
+        cn.rotation.x=Math.PI/2;
+        cn.position.set(LANES[coinLanes[j]], 1.2, z);
+        scene.add(cn); cns.push(cn);
+      }
+    }
+    mapLoopOffset = offset - MAP_TOTAL_LENGTH;
+  }
+
+  function hit(a,b,t){
+    t=t||1.4;
+    return Math.abs(a.position.x-b.position.x)<t && Math.abs(a.position.z-b.position.z)<2.2;
+  }
+
+  function update(){
+    if(!running) return;
+    // Gets faster over time — no max cap
+    spd=0.5+dist*0.0002;
+    dist+=spd*2;
+    player.position.x+=(targetX-player.position.x)*0.12;
+    var tilt=(targetX-player.position.x)*0.15;
+    player.rotation.z+=(tilt-player.rotation.z)*0.1;
+
+    // Move obstacles — recycle to back when passed
+    var furthestObs=-999;
+    for(var i=0;i<obs.length;i++){if(obs[i].position.z<furthestObs) furthestObs=obs[i].position.z;}
+    for(var i=0;i<obs.length;i++){
+      var o=obs[i];
+      o.position.z+=spd-o.userData.speed;
+      if(o.position.z>15){
+        // Recycle: send back behind the furthest obstacle
+        o.position.z=furthestObs-10-Math.random()*5;
+        var newLane=Math.floor(Math.random()*3);
+        o.position.x=LANES[newLane];
+        furthestObs=Math.min(furthestObs,o.position.z);
+      }
+      if(hit(player,o)) gameOver();
+    }
+    // Move coins — recycle
+    var furthestCoin=-999;
+    for(var i=0;i<cns.length;i++){if(cns[i].position.z<furthestCoin) furthestCoin=cns[i].position.z;}
+    for(var i=0;i<cns.length;i++){
+      var c=cns[i];
+      c.position.z+=spd; c.rotation.z+=0.05;
+      if(hit(player,c,1.2)){
+        sc+=10; coinSound(); spawnCoinParticles(c.position.clone());
+        c.position.z=furthestCoin-8-Math.random()*5;
+        c.position.x=LANES[Math.floor(Math.random()*3)];
+        continue;
+      }
+      if(c.position.z>15){
+        c.position.z=furthestCoin-8-Math.random()*5;
+        c.position.x=LANES[Math.floor(Math.random()*3)];
+      }
+    }
+    // Scenery
+    for(var i=0;i<trs.length;i++){trs[i].position.z+=spd;if(trs[i].position.z>15)trs[i].position.z-=RL;}
+    for(var i=0;i<blds.length;i++){blds[i].position.z+=spd;if(blds[i].position.z>20)blds[i].position.z-=RL;}
+    for(var i=0;i<clds.length;i++){clds[i].position.z+=spd*0.4;if(clds[i].position.z>15){clds[i].position.z=-80-Math.random()*30;clds[i].position.x=-25+Math.random()*50;}}
+    for(var i=0;i<segs.length;i++){segs[i].position.z+=spd;if(segs[i].position.z>RL/2)segs[i].position.z-=RL;}
+
+    // No need to respawn — obstacles recycle automatically
+
+    updateParticles();
+    elScore.textContent=sc;
+    elDist.textContent=Math.floor(dist)+'m';
+  }
+  function gameOver(){
+    if(overShown)return; overShown=true; running=false;
+    crashSound();
+    document.getElementById('e-score').textContent=sc;
+    document.getElementById('e-dist').textContent=Math.floor(dist)+'m 주행';
+    elEnd.style.display='flex';
+  }
+  function animate(){
+    requestAnimationFrame(animate);
+    update();
+    if(renderer) renderer.render(scene,camera);
+  }
+
+  // Controls
+  var touchX=0;
+  document.addEventListener('touchstart',function(e){touchX=e.touches[0].clientX;},{passive:true});
+  document.addEventListener('touchend',function(e){
+    if(!running)return;
+    var dx=e.changedTouches[0].clientX-touchX;
+    if(Math.abs(dx)>20){
+      if(dx<0&&lane>0)lane--;
+      else if(dx>0&&lane<2)lane++;
+      targetX=LANES[lane];
+    }
+  },{passive:true});
+  document.addEventListener('keydown',function(e){
+    if(!running)return;
+    if(e.key==='ArrowLeft'&&lane>0){lane--;targetX=LANES[lane];}
+    if(e.key==='ArrowRight'&&lane<2){lane++;targetX=LANES[lane];}
+  });
+
+  // Show mobile controls only on touch devices
+  var isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  if(isMobile){
+    document.querySelector('.mobile-controls').style.display = 'flex';
+  }
+
+  // Mobile buttons
+  function moveLeft(){ if(!running)return; if(lane>0){lane--;targetX=LANES[lane];} }
+  function moveRight(){ if(!running)return; if(lane<2){lane++;targetX=LANES[lane];} }
+  document.getElementById('btn-left').addEventListener('touchstart',function(e){e.preventDefault();moveLeft();},{passive:false});
+  document.getElementById('btn-right').addEventListener('touchstart',function(e){e.preventDefault();moveRight();},{passive:false});
+  document.getElementById('btn-left').addEventListener('click',moveLeft);
+  document.getElementById('btn-right').addEventListener('click',moveRight);
+});
+</script>
+</body>
+</html>
