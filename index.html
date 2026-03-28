@@ -316,6 +316,27 @@ body {
 }
 #game-intro .hint { font-size: 9px; color: rgba(255,255,255,0.5); margin-top: 14px; }
 
+/* Loading overlay */
+#game-loading {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(180deg, #3A7BD5, #87CEEB 50%, #7EC886);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  z-index: 26;
+}
+#game-loading .ld-text {
+  font-size: 14px; font-weight: 800; color: #fff;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.2);
+}
+#game-loading .ld-bar {
+  width: 160px; height: 6px; background: rgba(255,255,255,0.3);
+  border-radius: 3px; margin-top: 12px; overflow: hidden;
+}
+#game-loading .ld-fill {
+  width: 0%; height: 100%; background: #fff;
+  border-radius: 3px; transition: width 0.3s;
+}
+
 /* Countdown overlay */
 #game-countdown {
   position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -514,6 +535,10 @@ body {
         <button class="go-btn" id="btn-start">START</button>
         <p class="hint">&#x2B05; &#x27A1; 좌우 화살표키로 조작</p>
       </div>
+      <div id="game-loading">
+        <div class="ld-text">로딩 중...</div>
+        <div class="ld-bar"><div class="ld-fill" id="ld-fill"></div></div>
+      </div>
       <div id="game-countdown">
         <div class="cd-num" id="cd-num">3</div>
       </div>
@@ -690,6 +715,23 @@ waitForThree(function(){
   document.getElementById('btn-retry').onclick = restart;
   document.getElementById('btn-quit').onclick = closeGame;
 
+  var elLoading = document.getElementById('game-loading');
+  var elLdFill = document.getElementById('ld-fill');
+  var modelsReady = false;
+  var loadProgress = 0;
+  var totalModels = 5; // car, obstacle, tree, house, house2, cloud
+
+  function updateLoadBar(){
+    loadProgress++;
+    elLdFill.style.width = Math.min(100, Math.round(loadProgress/totalModels*100))+'%';
+    if(loadProgress >= totalModels){
+      modelsReady = true;
+      elLoading.style.display = 'none';
+      resetGameState();
+      startCountdown();
+    }
+  }
+
   function openGame(){
     elApp.style.display = 'none';
     elGame.style.display = 'block';
@@ -697,13 +739,18 @@ waitForThree(function(){
     elEnd.style.display = 'none';
     elCountdown.style.display = 'none';
     initAudio();
-    // Init game then start countdown
-    setTimeout(function(){
-      initGame();
-      // 항상 게임 상태 초기화
-      resetGameState();
-      startCountdown();
-    }, 50);
+    if(modelsReady){
+      setTimeout(function(){
+        initGame();
+        resetGameState();
+        startCountdown();
+      }, 50);
+    } else {
+      elLoading.style.display = 'flex';
+      loadProgress = 0;
+      elLdFill.style.width = '0%';
+      setTimeout(function(){ initGame(); }, 50);
+    }
   }
   function resetGameState(){
     sc=0; dist=0; spd=10; lane=1; targetX=0;
@@ -845,7 +892,7 @@ waitForThree(function(){
       // Load obstacle model (pink toy car)
       console.log('[MycleGame] obstacle.glb 로딩 시작...');
       loader.load('obstacle.glb', function(gltf2){
-        console.log('[MycleGame] obstacle.glb 로딩 완료!');
+        console.log('[MycleGame] obstacle.glb 로딩 완료!'); updateLoadBar();
         obsModelLoaded = gltf2.scene;
         obsModelLoaded.scale.set(3.0,3.0,3.0);
         obsModelLoaded.rotation.set(0, Math.PI/2, 0);
@@ -863,7 +910,7 @@ waitForThree(function(){
       // Load tree model
       console.log('[MycleGame] tree.glb 로딩 시작...');
       loader.load('tree.glb', function(gltf3){
-        console.log('[MycleGame] tree.glb 로딩 완료!');
+        console.log('[MycleGame] tree.glb 로딩 완료!'); updateLoadBar();
         treeModelLoaded = gltf3.scene;
         treeModelLoaded.scale.set(8.0,8.0,8.0);
         treeModelLoaded.traverse(function(child){
@@ -872,7 +919,7 @@ waitForThree(function(){
         // Replace existing trees with GLB model
         trs.forEach(function(t){ scene.remove(t); });
         trs=[];
-        for(var i=0;i<400;i++){
+        for(var i=0;i<100;i++){
           var t=mkTree(); var s=Math.random()>0.5?1:-1;
           var dist= 7 + Math.random()*10;
           t.position.set(s*dist, 0, -Math.random()*RL);
@@ -883,7 +930,7 @@ waitForThree(function(){
       // Load house model
       console.log('[MycleGame] house.glb 로딩 시작...');
       loader.load('house.glb', function(gltf4){
-        console.log('[MycleGame] house.glb 로딩 완료!');
+        console.log('[MycleGame] house.glb 로딩 완료!'); updateLoadBar();
         houseModelLoaded = gltf4.scene;
         houseModelLoaded.scale.set(12.0,20.0,12.0);
         houseModelLoaded.traverse(function(child){
@@ -892,7 +939,7 @@ waitForThree(function(){
         // Replace existing buildings with GLB model
         blds.forEach(function(b){ scene.remove(b); });
         blds=[];
-        for(var i=0;i<400;i++){
+        for(var i=0;i<80;i++){
           var s=Math.random()>0.5?1:-1;
           var b=mkBuilding(s);
           b.position.set(s*(8+Math.random()*5),0,-Math.random()*RL);
@@ -903,14 +950,14 @@ waitForThree(function(){
       // Load house2 model
       console.log('[MycleGame] house2.glb 로딩 시작...');
       loader.load('house2.glb', function(gltf6){
-        console.log('[MycleGame] house2.glb 로딩 완료!');
+        console.log('[MycleGame] house2.glb 로딩 완료!'); updateLoadBar();
         house2ModelLoaded = gltf6.scene;
         house2ModelLoaded.scale.set(12.0,20.0,12.0);
         house2ModelLoaded.traverse(function(child){
           if(child.isMesh){ child.castShadow=true; }
         });
         // Add more buildings with house2
-        for(var i=0;i<300;i++){
+        for(var i=0;i<60;i++){
           var s=Math.random()>0.5?1:-1;
           var b=mkBuilding2(s);
           b.position.set(s*(8+Math.random()*5),0,-Math.random()*RL);
@@ -921,7 +968,7 @@ waitForThree(function(){
       // Load cloud model
       console.log('[MycleGame] cloud_new.glb 로딩 시작...');
       loader.load('cloud_new.glb', function(gltf5){
-        console.log('[MycleGame] cloud_new.glb 로딩 완료!');
+        console.log('[MycleGame] cloud_new.glb 로딩 완료!'); updateLoadBar();
         cloudModelLoaded = gltf5.scene;
         cloudModelLoaded.scale.set(4.0,4.0,4.0);
         cloudModelLoaded.traverse(function(child){
@@ -939,7 +986,7 @@ waitForThree(function(){
       });
     });
 
-    for(var i=0;i<500;i++){
+    for(var i=0;i<100;i++){
       var t=mkTree(); var s=Math.random()>0.5?1:-1;
       var dist= 8 + Math.random()*10;
       t.position.set(s*dist, 0, -Math.random()*RL);
