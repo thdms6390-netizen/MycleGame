@@ -337,15 +337,6 @@ body {
   border-radius: 3px; transition: width 0.3s;
 }
 
-#game-loading .ld-sub {
-  font-size: 10px; color: rgba(255,255,255,0.6);
-  margin-top: 10px;
-}
-#game-loading .ld-mobile {
-  font-size: 9px; color: rgba(255,200,200,0.8);
-  margin-top: 6px;
-}
-
 /* Countdown overlay */
 #game-countdown {
   position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -547,8 +538,6 @@ body {
       <div id="game-loading">
         <div class="ld-text">로딩 중...</div>
         <div class="ld-bar"><div class="ld-fill" id="ld-fill"></div></div>
-        <p class="ld-sub">첫 로딩은 살짝 걸릴 수 있어요!</p>
-        <p class="ld-mobile" id="ld-mobile"></p>
       </div>
       <div id="game-countdown">
         <div class="cd-num" id="cd-num">3</div>
@@ -579,9 +568,9 @@ body {
           </div>
           <button class="retry" id="btn-retry">다시 하기</button>
           <button class="quit" id="btn-quit">나가기</button>
+          <p class="promo">&#x1F527; 정비소를 이용하시면 <b>이어서 하기</b> 쿠폰을 드려요!</p>
           <p class="promo">&#x1F3C6; 1등 상품 : <b style="color:#00835F;">스타벅스 3만원</b></p>
           <p class="promo" style="color:#aaa; font-size:8px;">매주 월요일 초기화됩니다</p>
-          <p class="promo">&#x1F527; 정비소를 이용하시면 <b>이어서 하기</b> 쿠폰을 드려요!</p>
         </div>
       </div>
       <div class="mobile-controls">
@@ -692,10 +681,6 @@ waitForThree(function(){
       if(p.userData.life<=0){scene.remove(p);particles.splice(i,1);}
     }
   }
-
-  // Mobile detect (전역)
-  var isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-  var OBJ_MULT = isMobile ? 0.3 : 1; // 모바일은 30%만
 
   // State
   let inited = false, running = false, overShown = false;
@@ -830,10 +815,10 @@ waitForThree(function(){
     camera.position.set(0,5.5,12);
     camera.lookAt(0,0.5,-15);
 
-    renderer = new THREE.WebGLRenderer({antialias:!isMobile});
+    renderer = new THREE.WebGLRenderer({antialias:true, powerPreference:'high-performance'});
     renderer.setSize(w,h);
-    renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio,2));
-    renderer.shadowMap.enabled = !isMobile;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+    renderer.shadowMap.enabled = true;
     renderer.domElement.style.position = 'absolute';
     renderer.domElement.style.top = '0';
     renderer.domElement.style.left = '0';
@@ -844,7 +829,7 @@ waitForThree(function(){
     scene.add(new THREE.AmbientLight(0xffffff,1.0));
     var dl = new THREE.DirectionalLight(0xFFFAE6,1.2);
     dl.position.set(10,30,20); dl.castShadow=true;
-    dl.shadow.camera.far=100; dl.shadow.mapSize.set(1024,1024);
+    dl.shadow.camera.far=60; dl.shadow.mapSize.set(512,512);
     scene.add(dl);
     // Fill light from front
     var fl = new THREE.DirectionalLight(0xADD8E6,0.4);
@@ -954,7 +939,7 @@ waitForThree(function(){
         // Replace existing buildings with GLB model
         blds.forEach(function(b){ scene.remove(b); });
         blds=[];
-        for(var i=0;i<Math.floor(200*OBJ_MULT);i++){
+        for(var i=0;i<200;i++){
           var s=Math.random()>0.5?1:-1;
           var b=mkBuilding(s);
           b.position.set(s*(11+Math.random()*5),0,-Math.random()*RL);
@@ -972,7 +957,7 @@ waitForThree(function(){
           if(child.isMesh){ child.castShadow=true; }
         });
         // Add more buildings with house2
-        for(var i=0;i<Math.floor(150*OBJ_MULT);i++){
+        for(var i=0;i<150;i++){
           var s=Math.random()>0.5?1:-1;
           var b=mkBuilding2(s);
           b.position.set(s*(11+Math.random()*5),0,-Math.random()*RL);
@@ -1001,7 +986,7 @@ waitForThree(function(){
       });
     });
 
-    for(var i=0;i<Math.floor(100*OBJ_MULT);i++){
+    for(var i=0;i<100;i++){
       var t=mkTree(); var s=Math.random()>0.5?1:-1;
       var dist= 8 + Math.random()*10;
       t.position.set(s*dist, 0, -Math.random()*RL);
@@ -1062,9 +1047,6 @@ waitForThree(function(){
     var model = obsModelLoaded || carModelLoaded;
     if(model){
       var clone=model.clone();
-      clone.traverse(function(child){
-        if(child.isMesh){ child.castShadow=true; }
-      });
       // Flip 180 to face forward (show front to player)
       var wrap=new THREE.Group();
       wrap.add(clone);
@@ -1085,12 +1067,9 @@ waitForThree(function(){
     return g;
   }
   function mkTree(){
-    var g=new THREE.Group();
+    var g=new THREE.Group(); g.matrixAutoUpdate=false;
     if(treeModelLoaded){
       var clone=treeModelLoaded.clone();
-      clone.traverse(function(child){
-        if(child.isMesh){ child.castShadow=true; }
-      });
       var sc=5+Math.random()*4;
       clone.scale.set(sc, sc, sc);
       clone.position.y = 3.0;
@@ -1146,10 +1125,9 @@ waitForThree(function(){
     return g;
   }
   function mkBuilding2(side){
-    var g=new THREE.Group();
+    var g=new THREE.Group(); g.matrixAutoUpdate=false;
     if(house2ModelLoaded){
       var clone=house2ModelLoaded.clone();
-      clone.traverse(function(child){ if(child.isMesh) child.castShadow=true; });
       var sc=8+Math.random()*5;
       clone.scale.set(sc, sc*1.6, sc);
       clone.position.y=4.0;
@@ -1160,10 +1138,9 @@ waitForThree(function(){
     return mkBuilding(side);
   }
   function mkBuilding(side){
-    var g=new THREE.Group();
+    var g=new THREE.Group(); g.matrixAutoUpdate=false;
     if(houseModelLoaded){
       var clone=houseModelLoaded.clone();
-      clone.traverse(function(child){ if(child.isMesh) child.castShadow=true; });
       var sc=8+Math.random()*5;
       clone.scale.set(sc, sc*1.6, sc);
       clone.position.y=1.5;
@@ -1336,8 +1313,8 @@ waitForThree(function(){
       }
     }
     // Scenery
-    for(var i=0;i<trs.length;i++){trs[i].position.z+=spd;if(trs[i].position.z>15)trs[i].position.z-=RL;}
-    for(var i=0;i<blds.length;i++){blds[i].position.z+=spd;if(blds[i].position.z>20)blds[i].position.z-=RL;}
+    for(var i=0;i<trs.length;i++){trs[i].position.z+=spd;if(trs[i].position.z>15)trs[i].position.z-=RL;trs[i].updateMatrix();}
+    for(var i=0;i<blds.length;i++){blds[i].position.z+=spd;if(blds[i].position.z>20)blds[i].position.z-=RL;blds[i].updateMatrix();}
     for(var i=0;i<clds.length;i++){clds[i].position.z+=spd*0.4;if(clds[i].position.z>15){clds[i].position.z=-80-Math.random()*30;clds[i].position.x=-25+Math.random()*50;}}
     for(var i=0;i<segs.length;i++){segs[i].position.z+=spd;if(segs[i].position.z>RL/2)segs[i].position.z-=RL;}
 
@@ -1381,10 +1358,7 @@ waitForThree(function(){
   // Show mobile controls only on touch devices
   var isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
   if(isMobile){
-    // 모바일은 게임 차단 - 웹으로 유도
-    document.getElementById('open-game').onclick = function(){
-      alert('PC 웹페이지에서 실행해주세요!');
-    };
+    document.querySelector('.mobile-controls').style.display = 'flex';
   }
 
   // Mobile buttons
